@@ -14,6 +14,7 @@ Route::get('/user', function (Request $request) {
 Route::group(['prefix'=>"techer"],function(){
 
     Route::post("register",[AuthController::class,"register"]);
+     Route::post("login",[AuthController::class,"login"]);
 
 });
 
@@ -27,6 +28,8 @@ Route::group(['prefix'=>"student"],function(){
 
 Route::group(['prefix'=>"family"],function(){
       Route::post("register",[FamliyAuthController::class,"register"]);
+       Route::post("login",[FamliyAuthController::class,"login"]);
+
 });
 
 
