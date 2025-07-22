@@ -11,10 +11,14 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 /////////////////////////////////////////////////
-Route::group(['prefix'=>"techer"],function(){
+Route::group(['prefix'=>"teacher"],function(){
 
     Route::post("register",[AuthController::class,"register"]);
      Route::post("login",[AuthController::class,"login"]);
+
+     Route::middleware('auth:teacher_api')->group(function(){
+     Route::post("logout",[AuthController::class,'logout']);
+     });
 
 });
 
@@ -27,8 +31,12 @@ Route::group(['prefix'=>"student"],function(){
 //////////////////////////////////////////////Family//////////
 
 Route::group(['prefix'=>"family"],function(){
-      Route::post("register",[FamliyAuthController::class,"register"]);
+       Route::post("register",[FamliyAuthController::class,"register"]);
        Route::post("login",[FamliyAuthController::class,"login"]);
+
+       Route::middleware('auth:family_api')->group(function(){
+         Route::post("logout",[FamliyAuthController::class,"logout"]);
+       });
 
 });
 

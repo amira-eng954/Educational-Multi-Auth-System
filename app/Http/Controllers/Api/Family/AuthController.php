@@ -63,4 +63,15 @@ class AuthController extends Controller
       
 
     }
+
+    public function logout(Request $request)
+    { 
+        $family=$request->user('family_api')->currentAccessToken()->delete();
+        return response()->json([
+           
+            'suc'=>"logout suc"
+        ]);
+
+
+    }
 }

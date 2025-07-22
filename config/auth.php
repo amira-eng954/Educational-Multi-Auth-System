@@ -71,7 +71,7 @@ return [
         ],
 
          'family_api' => [
-            'parent' => 'sanctum',
+            'driver' => 'sanctum',
             'provider' => 'families',
         ],
     ],

@@ -14,7 +14,7 @@ class registerRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -31,8 +31,8 @@ class registerRequest extends FormRequest
             'email'=>"required|email|unique:teachers,email",
             'password'=>"required|min:3|",
             'phone'=>'required|string',
-            'image'=>'nullable',
-            'age'=>'required|min:12'
+            'image'=>'required|image|mimes:png,jpg',
+            'age'=>'required|integer|min:23'
         ];
     }
 
