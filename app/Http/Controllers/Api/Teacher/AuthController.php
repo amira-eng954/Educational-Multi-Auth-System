@@ -24,11 +24,10 @@ class AuthController extends Controller
        }
        $teacher=Teacher::create($teacher);
        $token=$teacher->createToken("teacher")->plainTextToken;
+        return successResponse("resgister suc teacher",["token"=>$token]);
 
-       return response()->json([
-        "suc"=>"register teacher",
-        'token '=>$token
-       ]);
+
+       
     }
 
 
@@ -39,20 +38,15 @@ class AuthController extends Controller
         $teacher=Teacher::where("email",'=',$new['email'])->first();
         if(!$teacher)
         {
-            return response()->json([
-        "suc"=>"register teacher not found",
-        
-       ]);
+           
+            return failResponse("not found email");
         }
 
         if(!Hash::check($new['password'],$teacher->password))
         {
 
-             return response()->json([
-        "suc"=>"register teacher pass  not found",
-        
-       ]);
-
+            return failResponse("not found password");
+  
         }
 
         if($teacher->tokens()->count()>0)
@@ -60,11 +54,7 @@ class AuthController extends Controller
             $teacher->tokens()->delete();
         }
        $token= $teacher->createToken('teacher')->plainTextToken;
-
-          return response()->json([
-        "suc"=>"login teacher",
-        'token '=>$token
-       ]);
+       return successResponse("suc login teacher",['token'=>$token]);
 
         
     }
@@ -75,11 +65,15 @@ class AuthController extends Controller
 
         $request->user('teacher_api')->currentAccessToken()->delete();
           
-          return response()->json([
-        "suc"=>"logout teacher",
-       
-       ]);
-
+         return successResponse("suc logout teacher");
 
     }
+
+     public function profile(Request $request)
+    {
+      $profile=$request->user('teacher_api');
+        return successResponse("suc profile",$profile);
+
+    }
+
 }

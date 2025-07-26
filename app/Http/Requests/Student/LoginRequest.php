@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Http\Requests\Student;
-
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Http\FormRequest;
-
 class LoginRequest extends FormRequest
 {
     /**
@@ -23,7 +24,18 @@ class LoginRequest extends FormRequest
     {
         return [
             //
-            ''
+            'email'=>"required|email",
+            'password'=>"required"
         ];
     }
+
+     protected function failedValidation(Validator $validator)
+{
+    throw new HttpResponseException(
+        response()->json([
+            'status' => false,
+            'message' => $validator->errors()->first()
+        ], 422)
+    );
+}
 }

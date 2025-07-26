@@ -22,12 +22,10 @@ class AuthController extends Controller
         $data['image']=(new UploadImage())->upload($request->file('image'),"family");
         }
 
-        $family=Family::create($data);
+       $family=Family::create($data);
        $token= $family->createToken("family")->plainTextToken;
 
-        return response()->json([
-            'token'=>$token
-        ]);
+       return successResponse("suc register family",['token'=>$token]);
 
     }
 
@@ -38,16 +36,12 @@ class AuthController extends Controller
          $family=Family::where("email","=",$data['email'])->first();
          if(!$family)
          {
-                return response()->json([
-            'not auth'=>"not exit"
-        ]);
+             return failResponse("not found email");
          }
 
             if(!Hash::check($data['password'],$family->password))
             {
-                    return response()->json([
-            'not auth'=>"not exit"
-        ]);
+                     return failResponse("not found password");
             }
 
             if($family->tokens()->count()>0)
@@ -55,10 +49,7 @@ class AuthController extends Controller
                 $family->tokens()->delete();
             }
             $token=$family->createToken('family')->plainTextToken;
-             return response()->json([
-            'token'=>$token,
-            'suc'=>"login suc"
-        ]);
+          return successResponse("suc login family",['token'=>$token]);
 
       
 
@@ -67,11 +58,14 @@ class AuthController extends Controller
     public function logout(Request $request)
     { 
         $family=$request->user('family_api')->currentAccessToken()->delete();
-        return response()->json([
-           
-            'suc'=>"logout suc"
-        ]);
+         return successResponse("suc logout");
 
 
+    }
+
+    public function profile(Request $request)
+    {
+        $family=$request->user('family_api');
+        return successResponse("profile family",$family);
     }
 }

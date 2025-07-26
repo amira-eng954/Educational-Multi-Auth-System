@@ -18,6 +18,7 @@ Route::group(['prefix'=>"teacher"],function(){
 
      Route::middleware('auth:teacher_api')->group(function(){
      Route::post("logout",[AuthController::class,'logout']);
+     Route::get('profile',[AuthController::class,'profile']);
      });
 
 });
@@ -26,6 +27,12 @@ Route::group(['prefix'=>"teacher"],function(){
 Route::group(['prefix'=>"student"],function(){
      
     Route::post("register",[StudentAuthController::class,"register"]);
+    Route::post("login",[StudentAuthController::class,"login"]);
+
+    Route::middleware('auth:student_api')->group(function(){
+     Route::post("logout",[StudentAuthController::class,"logout"]);
+      Route::get('profile',[StudentAuthController::class,'profile']);
+    });
 });
 
 //////////////////////////////////////////////Family//////////
@@ -36,6 +43,7 @@ Route::group(['prefix'=>"family"],function(){
 
        Route::middleware('auth:family_api')->group(function(){
          Route::post("logout",[FamliyAuthController::class,"logout"]);
+          Route::get('profile',[FamliyAuthController::class,'profile']);
        });
 
 });
