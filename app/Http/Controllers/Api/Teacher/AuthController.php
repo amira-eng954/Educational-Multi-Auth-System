@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Teacher\LoginRequest;
+use App\Http\Requests\Teacher\ProfileRequest;
 use App\Http\Requests\Teacher\registerRequest;
 use App\Models\Teacher;
 use App\Services\UploadImage;
@@ -73,6 +74,19 @@ class AuthController extends Controller
     {
       $profile=$request->user('teacher_api');
         return successResponse("suc profile",$profile);
+
+    }
+
+      public function update_profile(ProfileRequest $request)
+    {
+        $data=$request->validated();
+        if($request->hasFile('image'))
+        {
+
+        }
+        $teacher=$request->user("teacher_api");
+        $teacher->update($data);
+        return successResponse("update profile suc",$teacher);
 
     }
 

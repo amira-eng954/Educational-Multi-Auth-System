@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Family;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Family\LoginRequest;
+use App\Http\Requests\Family\ProfileRequest;
 use App\Http\Requests\Family\RegisterRequest;
 use App\Models\Family;
 use App\Services\UploadImage ;
@@ -67,5 +68,22 @@ class AuthController extends Controller
     {
         $family=$request->user('family_api');
         return successResponse("profile family",$family);
+    }
+
+    public function update_profile(ProfileRequest $request)
+    {
+        $data=$request->validated();
+      
+        if($request->hasFile("image"))
+        {
+
+             
+        }
+        $family=$request->user("family_api");
+       $family->update($data);
+      
+        return successResponse("update suc profile",$family);
+        
+
     }
 }
