@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Teacher\LoginRequest;
 use App\Http\Requests\Teacher\ProfileRequest;
 use App\Http\Requests\Teacher\registerRequest;
+use App\Http\Resources\TeacherResource;
 use App\Models\Teacher;
 use App\Services\UploadImage;
 use Illuminate\Http\Request;
@@ -73,7 +74,7 @@ class AuthController extends Controller
      public function profile(Request $request)
     {
       $profile=$request->user('teacher_api');
-        return successResponse("suc profile",$profile);
+        return successResponse("suc profile",new TeacherResource($profile));
 
     }
 
@@ -86,7 +87,7 @@ class AuthController extends Controller
         }
         $teacher=$request->user("teacher_api");
         $teacher->update($data);
-        return successResponse("update profile suc",$teacher);
+        return successResponse("update profile suc",new TeacherResource($teacher));
 
     }
 

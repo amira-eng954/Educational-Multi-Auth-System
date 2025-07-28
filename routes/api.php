@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Family\AuthController as FamliyAuthController;
 use App\Http\Controllers\Api\Student\AuthController as StudentAuthController;
 use App\Http\Controllers\Api\Teacher\AuthController;
+use App\Http\Controllers\Api\Teacher\CourseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,7 @@ Route::group(['prefix'=>"teacher"],function(){
       Route::post("logout",[AuthController::class,'logout']);
       Route::get('profile',[AuthController::class,'profile']);
       Route::post("update-profile",[AuthController::class,'update_profile']);
+      Route::apiResource("courses",CourseController::class);
      });
 
 });
