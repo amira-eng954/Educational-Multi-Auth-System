@@ -17,7 +17,7 @@ class CourseResource extends JsonResource
         return[
             'title'=>$this->title,
             'description'=>$request->desc,
-            'image'=>"assets('storage/images'.$this->image",
+            'image'=> asset('storage/images/' . $this->image),
             'teacher'=>new TeacherResource($this->teacher),
         ] ;
     }

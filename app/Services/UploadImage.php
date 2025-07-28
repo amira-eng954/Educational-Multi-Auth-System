@@ -16,6 +16,6 @@ class UploadImage{
 
     public function deleteImage($folder,$file)
     {
-        Storage::desk("public")->delete($folder.'/'.$file);
+        Storage::disk("public")->delete($folder.'/'.$file);
     }
 }
