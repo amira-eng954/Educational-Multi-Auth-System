@@ -14,18 +14,27 @@ class CourseController extends Controller
 {
     //
 
+    public $teacher;
+    public function __construct()
+    {
+        $this->teacher=auth('teacher_api')->user();
+    }
+
     public function index()
     {
-        $teacher = Auth::guard('teacher_api')->user();
-        $courses=Course::where('teacher_id',$teacher->id)->get();
+        // $teacher = Auth::guard('teacher_api')->user();
+       
+        $courses=$this->teacher->courses()->get();
+
         return successResponse("all course",CourseResource::collection($courses));
 
     }
 
     public function show($id)
     {
-        $teacher=auth('teacher_api')->user();
-        $course=Course::where('id',$id)->where('teacher_id',$teacher->id)->first();
+       
+        //$course=Course::where('id',$id)->where('teacher_id',$this->teacher->id)->first();
+        $course=$this->teacher->courses()->where('id',$id)->first();
         if(!$course)
         {
             return failResponse("not found course");
@@ -35,7 +44,7 @@ class CourseController extends Controller
     }
      public function store(CourseRequest $request)
     {
-        $teacher=$request->user("teacher_api");
+        $teacher=$this->teacher;
         $course=$request->validated();
         if($request->image)
         {
@@ -74,7 +83,7 @@ class CourseController extends Controller
 
      public function destroy(Request $request,$id)
     {
-        $teacher=$request->user("teacher_api")->id;
+        $teacher=$this->teacher->id;
         $course=Course::where('id',$id)->where('teacher_id',$teacher)->first();
         if(!$course)
         {
@@ -87,5 +96,23 @@ class CourseController extends Controller
         $course->delete();
         return successResponse("couse Deleted suc");
         
+    }
+
+
+    public function all_courses()
+    {
+        return successResponse("all courses",CourseResource::collection(Course::all()));
+    }
+
+    public function details($id)
+    {
+        $course=Course::find($id);
+        if(!$course)
+        {
+            return failResponse("not found course");
+        }
+
+          return successResponse(data: new CourseResource($course));
+
     }
 }

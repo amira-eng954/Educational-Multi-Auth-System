@@ -15,6 +15,7 @@ class CourseResource extends JsonResource
     public function toArray(Request $request): array
     {//parent::toArray($request)
         return[
+            'id'=>$this->id,
             'title'=>$this->title,
             'description'=>$request->desc,
             'image'=> asset('storage/images/' . $this->image),

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Family\AuthController as FamliyAuthController;
 use App\Http\Controllers\Api\Student\AuthController as StudentAuthController;
+use App\Http\Controllers\Api\Student\MainController;
 use App\Http\Controllers\Api\Teacher\AuthController;
 use App\Http\Controllers\Api\Teacher\CourseController;
 use Illuminate\Http\Request;
@@ -10,8 +11,17 @@ use Illuminate\Support\Facades\Route;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+//////////////////////////////public/////////////////////////////
 
-/////////////////////////////////////////////////
+Route::group(['prefix'=>"public"],function(){
+    
+   Route::get("all-courses",[CourseController::class,"all_courses"]);//كل الكورسات المتاحه فى الداتا بيز
+   Route::get("details/{id}",[CourseController::class,"details"]); // دى عرض تفاصيل الكورس 
+});
+
+
+
+/////////////////////////////////////////////////teacher//////////
 Route::group(['prefix'=>"teacher"],function(){
 
     Route::post("register",[AuthController::class,"register"]);
@@ -21,12 +31,12 @@ Route::group(['prefix'=>"teacher"],function(){
       Route::post("logout",[AuthController::class,'logout']);
       Route::get('profile',[AuthController::class,'profile']);
       Route::post("update-profile",[AuthController::class,'update_profile']);
-      Route::apiResource("courses",CourseController::class);
+      Route::apiResource("courses",CourseController::class); //curd cousers to one teacher
      });
 
 });
 
-/////////////////////////////////////////////////student/////////////
+/////////////////////////////////////////////////student//////////
 Route::group(['prefix'=>"student"],function(){
      
     Route::post("register",[StudentAuthController::class,"register"]);
@@ -36,10 +46,13 @@ Route::group(['prefix'=>"student"],function(){
       Route::post("logout",[StudentAuthController::class,"logout"]);
       Route::get('profile',[StudentAuthController::class,'profile']);
       Route::post("update-profile",[StudentAuthController::class,'update_profile']);
+      Route::post("enroll/{id}",[MainController::class,"enroll"]);// الاشتراك فى الكورس
+      Route::get("my-courses",[MainController::class,'my_courses']);//  كل كورساتى الل انا مسجل فيها
+      Route::get("details_course/{id}",[MainController::class,'detail_course']);//   تفاصيل كورس معين الطالب مسجل فيه
     });
 });
 
-//////////////////////////////////////////////Family//////////
+//////////////////////////////////////////////Family/////////////////
 
 Route::group(['prefix'=>"family"],function(){
        Route::post("register",[FamliyAuthController::class,"register"]);
