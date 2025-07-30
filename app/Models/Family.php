@@ -50,8 +50,13 @@ class Family extends Authenticatable
         ];
     }
 
-    public function students()
+    public function studentsFamily()
     {
-        $this->hasMany(Student::class);
+        $this->belongsToMany(Student::class);
+    }
+
+    public function teacherRating()
+    {
+        return $this->morphToMany(Teacher::class,"rateable","teacher_rating")->withPivot('comment','rate')->withTimestamps();
     }
 }

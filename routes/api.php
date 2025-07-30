@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\Api\Family\AuthController as FamliyAuthController;
+use App\Http\Controllers\Api\Family\mainController as FamilyMainController;
 use App\Http\Controllers\Api\Student\AuthController as StudentAuthController;
 use App\Http\Controllers\Api\Student\MainController;
 use App\Http\Controllers\Api\Teacher\AuthController;
 use App\Http\Controllers\Api\Teacher\CourseController;
+use App\Http\Controllers\Api\Teacher\MainController as TeacherMainController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,7 +34,12 @@ Route::group(['prefix'=>"teacher"],function(){
       Route::get('profile',[AuthController::class,'profile']);
       Route::post("update-profile",[AuthController::class,'update_profile']);
       Route::apiResource("courses",CourseController::class); //curd cousers to one teacher
+      Route::group(['prefix'=>"rating"],function(){
+         Route::post("studentRating/{id}",[TeacherMainController::class,'studentRating']);// المدرس بيقيم الطالب
+         Route::get("AllGivnRating",[TeacherMainController::class,"AllGivnRating"]);// كل التقيمات الل العائله والطلاب قيموها للمدرس
+      
      });
+    });
 
 });
 
@@ -49,6 +56,10 @@ Route::group(['prefix'=>"student"],function(){
       Route::post("enroll/{id}",[MainController::class,"enroll"]);// الاشتراك فى الكورس
       Route::get("my-courses",[MainController::class,'my_courses']);//  كل كورساتى الل انا مسجل فيها
       Route::get("details_course/{id}",[MainController::class,'detail_course']);//   تفاصيل كورس معين الطالب مسجل فيه
+      Route::group(['prefix'=>'rating'],function(){
+         Route::post("teacherRating/{id}",[MainController::class,"teacherRating"]);// تقييم الطالب للمدرس
+
+      });
     });
 });
 
@@ -58,10 +69,13 @@ Route::group(['prefix'=>"family"],function(){
        Route::post("register",[FamliyAuthController::class,"register"]);
        Route::post("login",[FamliyAuthController::class,"login"]);
 
-       Route::middleware('auth:family_api')->group(function(){
-         Route::post("logout",[FamliyAuthController::class,"logout"]);
-         Route::get('profile',[FamliyAuthController::class,'profile']);
-         Route::post("update-profile",[FamliyAuthController::class,'update_profile']);
+      Route::middleware('auth:family_api')->group(function(){
+        Route::post("logout",[FamliyAuthController::class,"logout"]);
+        Route::get('profile',[FamliyAuthController::class,'profile']);
+        Route::post("update-profile",[FamliyAuthController::class,'update_profile']);
+        Route::group(['prefix'=>"rating"],function(){
+            Route::post("teacherRating/{id}",[FamilyMainController::class,"familyRating"]);//تقيميم العائله للمدرس
+         });
        });
 
 });

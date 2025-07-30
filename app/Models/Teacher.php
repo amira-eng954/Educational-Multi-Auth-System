@@ -54,4 +54,20 @@ class Teacher extends Authenticatable
     {
         return $this->hasMany(Course::class);
     }
+
+    public function familyRatingMe()
+    {
+        return $this->morphedByMany(Family::class,'rateable','teacher_rating')->withPivot('comment','rate')->withTimestamps();
+
+    }
+
+    public function studentRatingMe()
+    {
+         return $this->morphedByMany(Student::class,'rateable','teacher_rating')->withPivot('comment','rate')->withTimestamps();
+    }
+
+    public function studentRating()
+    {
+         return $this->morphtoMany(Student::class,'rateable','student_rating')->withPivot('comment','rate')->withTimestamps();
+    }
 }

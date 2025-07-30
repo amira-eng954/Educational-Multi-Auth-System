@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api\Student;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Main\RateRequest;
 use App\Http\Resources\CourseResource;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 
 class MainController extends Controller
@@ -51,6 +53,17 @@ class MainController extends Controller
 
         }
         return successResponse(data: new CourseResource($course));
+    }
+
+    public function teacherRating(RateRequest $request ,$id)
+    {
+        $teacher=Teacher::find($id);
+       $data= $this->student->teacherRating()->attach($id,[
+            'rate'=>$request->rate,
+            'comment'=>$request->comment
+        ]);
+        return successResponse(data:$data);
+
     }
 
 
