@@ -119,7 +119,7 @@ class CourseController extends Controller
 
     public function searchCourse($search)
     {
-          $course=Course::where("name","LIKE","%$search%")->get();
+          $course=Course::where("title","LIKE","%$search%")->get();
         if($course->isEmpty())
         {
             return failResponse("not found student to this name");
