@@ -115,4 +115,17 @@ class CourseController extends Controller
           return successResponse(data: new CourseResource($course));
 
     }
+
+
+    public function searchCourse($search)
+    {
+          $course=Course::where("name","LIKE","%$search%")->get();
+        if($course->isEmpty())
+        {
+            return failResponse("not found student to this name");
+        }
+
+        return successResponse("student", CourseResource::collection($course));
+
+    }
 }

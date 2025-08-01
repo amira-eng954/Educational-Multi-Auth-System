@@ -19,6 +19,11 @@ Route::group(['prefix'=>"public"],function(){
     
    Route::get("all-courses",[CourseController::class,"all_courses"]);//كل الكورسات المتاحه فى الداتا بيز
    Route::get("details/{id}",[CourseController::class,"details"]); // دى عرض تفاصيل الكورس 
+   Route::group(['prefix'=>"search"],function(){
+   Route::get("Teacher/{search}",[FamilyMainController::class,"searchTeacher"]);// بحث عن مدرس
+   Route::get("Student/{search}",[FamilyMainController::class,"searchStudent"]);//بحث عن طالب
+   Route::get("Course",[CourseController::class,'searchCourse']);// بحث عن كورس معين
+   });
 });
 
 
@@ -75,6 +80,8 @@ Route::group(['prefix'=>"family"],function(){
         Route::post("update-profile",[FamliyAuthController::class,'update_profile']);
         Route::group(['prefix'=>"rating"],function(){
             Route::post("teacherRating/{id}",[FamilyMainController::class,"familyRating"]);//تقيميم العائله للمدرس
+            Route::get("AllStudentRating",[FamilyMainController::class,'AllStudentRating']);//كل تقيمات الطلاب الخاصه ب العائله 
+            Route::get("AllFamilyRating",[FamilyMainController::class,'AllFamilyRating']);//كل تقيمات العائله الخاصه ب الممدرسين
          });
        });
 
