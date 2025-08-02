@@ -59,4 +59,9 @@ class Family extends Authenticatable
     {
         return $this->morphToMany(Teacher::class,"rateable","teacher_rating")->withPivot('comment','rate')->withTimestamps();
     }
+
+    public function verifications()
+    {
+        return $this->morphMany(Verification::class,'verificable');
+    }
 }

@@ -8,6 +8,7 @@ use App\Http\Requests\Student\LoginRequest;
 use App\Http\Requests\Student\ProfileRequest;
 use App\Http\Requests\Student\registerRequest;
 use App\Models\Student;
+use App\Services\sendVerificationCode;
 use App\Services\UploadImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -29,6 +30,7 @@ class AuthController extends Controller
 
        $student=Student::create($stu);
       $token= $student->createToken('student')->plainTextToken;
+      (new sendVerificationCode())->sendEmailVerificationCode($student);
       return successResponse("resgister suc student",["token"=>$token]);
 
   

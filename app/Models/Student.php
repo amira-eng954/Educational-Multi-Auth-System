@@ -69,4 +69,9 @@ class Student extends Authenticatable
     {
          return $this->morphedByMany(Teacher::class,"rateable",'student_rate')->withPivot("comment",'rate')->withTimestamps();
     }
+
+     public function verifications()
+    {
+        return $this->morphMany(Verification::class,'verificable');
+    }
 }

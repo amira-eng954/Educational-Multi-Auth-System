@@ -78,6 +78,7 @@ Route::group(['prefix'=>"family"],function(){
         Route::post("logout",[FamliyAuthController::class,"logout"]);
         Route::get('profile',[FamliyAuthController::class,'profile']);
         Route::post("update-profile",[FamliyAuthController::class,'update_profile']);
+        Route::post("verify",[FamliyAuthController::class,'verify']);
         Route::group(['prefix'=>"rating"],function(){
             Route::post("teacherRating/{id}",[FamilyMainController::class,"familyRating"]);//تقيميم العائله للمدرس
             Route::get("AllStudentRating",[FamilyMainController::class,'AllStudentRating']);//كل تقيمات الطلاب الخاصه ب العائله 
