@@ -8,9 +8,11 @@ use App\Http\Requests\Teacher\ProfileRequest;
 use App\Http\Requests\Teacher\registerRequest;
 use App\Http\Resources\TeacherResource;
 use App\Models\Teacher;
+use App\Services\sendVerificationCode;
 use App\Services\UploadImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -26,6 +28,7 @@ class AuthController extends Controller
        }
        $teacher=Teacher::create($teacher);
        $token=$teacher->createToken("teacher")->plainTextToken;
+       (new sendVerificationCode())->sendEmailVerificationCode($teacher);
         return successResponse("resgister suc teacher",["token"=>$token]);
 
 
@@ -88,6 +91,31 @@ class AuthController extends Controller
         $teacher=$request->user("teacher_api");
         $teacher->update($data);
         return successResponse("update profile suc",new TeacherResource($teacher));
+
+    }
+
+    public function verify(Request $request)
+    {
+        $code=Validator::make($request->only(['code']),[
+            'code'=>"required|string"
+        ]);
+        if($code->fails())
+        {
+            return failResponse(data:$code->errors());
+        }
+        $teacher=auth('teacher_api')->user();
+        $old=$teacher->verifications()->where([
+            ['uses','=',0],
+            ['type','=','email'],
+            ['expired_at','>',now()],
+            ['code','=',$code['code']]
+        ])->first();
+        if(!$old)
+        {
+            return failResponse("not exists code");
+        }
+        $old->update(['uses'=>1]);
+         return failResponse(" exists code");
 
     }
 

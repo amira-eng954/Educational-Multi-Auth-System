@@ -10,8 +10,10 @@ use App\Http\Requests\Student\registerRequest;
 use App\Models\Student;
 use App\Services\sendVerificationCode;
 use App\Services\UploadImage;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -89,6 +91,35 @@ class AuthController extends Controller
       
         return successResponse("update suc profile",$student);
         
+
+    }
+
+    public function verify(Request $request)
+    {
+      $code=Validator::make($request->only('code'),[
+        'code'=>"required|string"
+      ]);
+      if($code->fails())
+      {
+        return failResponse(data:$code->errors());
+      }
+      $student=$request->user('student_api');
+      $old=$student->verifications()->where([
+        ["code",'=',$code['code']],
+        ['expired_at','>',now()],
+        ['type','email'],
+        ['uses','=',0]
+      ])->first();
+      if(!$old)
+      {
+        return failResponse("not found code");
+      }
+
+      $old->update([
+        'uses'=>1
+      ]);
+      return successResponse("success vertivy code");
+
 
     }
 

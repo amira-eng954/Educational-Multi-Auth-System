@@ -16,9 +16,11 @@ class sendPasswordVerificationCode extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public $code;
+    public function __construct($code)
     {
         //
+        $this->code=$code;
     }
 
     /**
@@ -37,7 +39,10 @@ class sendPasswordVerificationCode extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'mail.verification',
+            with:[
+                'code'=>$this->code,
+            ]
         );
     }
 

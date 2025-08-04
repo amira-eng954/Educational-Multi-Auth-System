@@ -38,6 +38,7 @@ Route::group(['prefix'=>"teacher"],function(){
       Route::post("logout",[AuthController::class,'logout']);
       Route::get('profile',[AuthController::class,'profile']);
       Route::post("update-profile",[AuthController::class,'update_profile']);
+       Route::post("verify",[AuthController::class,'verify']);
       Route::apiResource("courses",CourseController::class); //curd cousers to one teacher
       Route::group(['prefix'=>"rating"],function(){
          Route::post("studentRating/{id}",[TeacherMainController::class,'studentRating']);// المدرس بيقيم الطالب
@@ -58,6 +59,8 @@ Route::group(['prefix'=>"student"],function(){
       Route::post("logout",[StudentAuthController::class,"logout"]);
       Route::get('profile',[StudentAuthController::class,'profile']);
       Route::post("update-profile",[StudentAuthController::class,'update_profile']);
+      Route::post("verify",[StudentAuthController::class,'verify']);
+
       Route::post("enroll/{id}",[MainController::class,"enroll"]);// الاشتراك فى الكورس
       Route::get("my-courses",[MainController::class,'my_courses']);//  كل كورساتى الل انا مسجل فيها
       Route::get("details_course/{id}",[MainController::class,'detail_course']);//   تفاصيل كورس معين الطالب مسجل فيه
