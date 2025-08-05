@@ -48,7 +48,7 @@ class  sendVerificationCode
             'code'=>$code,
             'expired_at'=>now()->addHour(),
             'uses'=>0,
-            'type'=>"phone"
+            'type'=>"password"
         ]);
         Mail::to($user)->send(new sendPasswordVerificationCode($code));
     }

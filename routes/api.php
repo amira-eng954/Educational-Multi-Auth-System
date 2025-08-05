@@ -33,8 +33,10 @@ Route::group(['prefix'=>"teacher"],function(){
 
     Route::post("register",[AuthController::class,"register"]);
      Route::post("login",[AuthController::class,"login"]);
+     Route::post("forget-password",[AuthController::class,"forgetPassword"]);
+     Route::post("reset-password",[AuthController::class,"resetPassword"]);
 
-     Route::middleware('auth:teacher_api')->group(function(){
+    Route::middleware('auth:teacher_api')->group(function(){
       Route::post("logout",[AuthController::class,'logout']);
       Route::get('profile',[AuthController::class,'profile']);
       Route::post("update-profile",[AuthController::class,'update_profile']);
@@ -54,6 +56,8 @@ Route::group(['prefix'=>"student"],function(){
      
     Route::post("register",[StudentAuthController::class,"register"]);
     Route::post("login",[StudentAuthController::class,"login"]);
+    Route::post("forget-password",[StudentAuthController::class,"forgetPassword"]);
+     Route::post("reset-password",[StudentAuthController::class,"resetPassword"]);
 
     Route::middleware('auth:student_api')->group(function(){
       Route::post("logout",[StudentAuthController::class,"logout"]);
@@ -76,6 +80,8 @@ Route::group(['prefix'=>"student"],function(){
 Route::group(['prefix'=>"family"],function(){
        Route::post("register",[FamliyAuthController::class,"register"]);
        Route::post("login",[FamliyAuthController::class,"login"]);
+       Route::post("forget-password",[FamliyAuthController::class,"forgetPassword"]);
+       Route::post("reset-password",[FamliyAuthController::class,"resetPassword"]);
 
       Route::middleware('auth:family_api')->group(function(){
         Route::post("logout",[FamliyAuthController::class,"logout"]);

@@ -7,6 +7,7 @@ use App\Http\Requests\Family\LoginRequest;
 use App\Http\Requests\Family\ProfileRequest;
 use App\Http\Requests\Family\RegisterRequest;
 use App\Models\Family;
+use App\Models\Verification;
 use App\Services\sendVerificationCode;
 use App\Services\UploadImage ;
 use Illuminate\Http\Request;
@@ -132,4 +133,61 @@ class AuthController extends Controller
 
 
     }
+
+
+     public function forgetPassword(Request $request)
+    {
+        $data=Validator::make($request->only(['email']),[
+            'email'=>"required|email|exists:families,email"
+        ]);
+        if($data->fails())
+        {
+            return failResponse(data:$data->errors());
+        }
+        $data=$data->validated();
+        $family=Family::where('email','=',$data['email'])->first();
+        if(!$family)
+        {
+            return failResponse("not found this email");
+        }
+        (new sendVerificationCode())->sendPasswordVerificationCode($family);
+        return successResponse("done send code for reset password");
+
+    }
+
+     public function resetPassword(Request $request)
+    {
+      $data=Validator::make($request->only(['code','password','password_confirmation']),[
+        'code'=>"required",
+        'password'=>'required|confirmed'
+      ]);
+      if($data->fails())
+      {
+        return failResponse(data:$data->errors());
+      }
+      $data=$data->validated();
+      $code=Verification::where([
+        ['code','=',$data['code']],
+        ['uses','=',0],
+        ['type','=','password'],
+        ['expired_at','>',now()]
+      ])->first();
+      if(!$code)
+      {
+        return failResponse("not found code");
+      }
+      $family=Family::find($code->verificable_id);
+      if(!$family)
+      {
+        return failResponse("not found family");
+      }
+      $family->update([
+        'password'=>Hash::make($data['password'])
+      ]);
+
+      $code->update(['uses'=>1]);
+      return successResponse("updated password suc");
+
+    }
+    
 }

@@ -8,9 +8,10 @@ use App\Http\Requests\Student\LoginRequest;
 use App\Http\Requests\Student\ProfileRequest;
 use App\Http\Requests\Student\registerRequest;
 use App\Models\Student;
+use App\Models\Verification;
 use App\Services\sendVerificationCode;
 use App\Services\UploadImage;
-
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -104,6 +105,7 @@ class AuthController extends Controller
         return failResponse(data:$code->errors());
       }
       $student=$request->user('student_api');
+      $code=$code->validated();
       $old=$student->verifications()->where([
         ["code",'=',$code['code']],
         ['expired_at','>',now()],
@@ -123,5 +125,61 @@ class AuthController extends Controller
 
     }
 
+    public function forgetPassword(Request $request)
+    {
+      $email=validator::make($request->only(['email']),[
+        'email'=>'required|email'
+      ]);
+      if($email->fails())
+      {
+        return failResponse(data:$email->errors());
+      }
+
+      $email=$email->validated();
+      $student=Student::where("email",'=',$email['email'])->first();
+      if(!$student)
+      {
+        return failResponse("not found email");
+      }
+      (new sendVerificationCode())->sendPasswordVerificationCode($student);
+      return successResponse("send code for reset password");
+
+    }
+
+     public function resetPassword(Request $request)
+    {
+      $data=Validator::make($request->only(['code','password','password_confirmation']),[
+        'code'=>"required",
+        'password'=>"required|confirmed"
+      ]);
+      if($data->fails())
+      {
+        return failResponse($data->errors());
+      }
+      $data=$data->Validated();
+      $code=Verification::where([
+        ['code','=',$data['code']],
+        ['expired_at','>',now()],
+        ['uses','=',0],
+        ['type','=','password']
+      ])->first();
+      if(!$code)
+      {
+        return failResponse("not found code");
+      }
+      $student=Student::find($code->verificable_id);
+      if(!$student)
+      {
+        return failResponse("not found student");
+      }
+      $student->update([
+        'password'=>Hash::make($data['password'])
+      ]);
+      $code->update([
+        'uses'=>1
+      ]);
+      return successResponse("updated password suc");
+    }
+    
 
 }
