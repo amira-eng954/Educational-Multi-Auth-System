@@ -122,7 +122,7 @@ class CourseController extends Controller
           $course=Course::where("title","LIKE","%$search%")->get();
         if($course->isEmpty())
         {
-            return failResponse("not found student to this name");
+            return failResponse("not found course to this name");
         }
 
         return successResponse("student", CourseResource::collection($course));

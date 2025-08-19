@@ -22,7 +22,7 @@ Route::group(['prefix'=>"public"],function(){
    Route::group(['prefix'=>"search"],function(){
    Route::get("Teacher/{search}",[FamilyMainController::class,"searchTeacher"]);// بحث عن مدرس
    Route::get("Student/{search}",[FamilyMainController::class,"searchStudent"]);//بحث عن طالب
-   Route::get("Course",[CourseController::class,'searchCourse']);// بحث عن كورس معين
+   Route::get("Course/{search}",[CourseController::class,'searchCourse']);// بحث عن كورس معين
    });
 });
 
